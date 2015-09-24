@@ -15,16 +15,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.software.shell.fab.ActionButton;
 
-import java.nio.charset.Charset;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SelectEventFragment.OnFragmentInteractionListener {
 
     private ActionButton actionButton;
     private MainActivityFragment mainActivityFragment;
@@ -135,7 +132,18 @@ public class MainActivity extends ActionBarActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
+                switch(position){
+                    case 0:
+                        Fragment fragment = new SelectEventFragment();
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+                        mDrawerList.setItemChecked(position, true);
+                        setTitle(menuOptions[position]);
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 1:
+                        break;
+                }
             }
         });
     }
@@ -146,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle(R.string.select_option);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -162,20 +170,23 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    /*private void selectItem(int position) {
         // update the main content by replacing fragments
-        /*Fragment fragment = new PlanetFragment();
+        Fragment fragment = new PlanetFragment();
         Bundle args = new Bundle();
         args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();*/
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(menuOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
-    }
+    }*/
 
+    public void onFragmentInteraction(String id){
+
+    }
 }
