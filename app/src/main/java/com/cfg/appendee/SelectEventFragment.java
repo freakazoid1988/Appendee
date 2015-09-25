@@ -16,10 +16,10 @@ import com.cfg.appendee.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
- * <p>
+ * <p/>
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
- * <p>
+ * <p/>
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
@@ -81,7 +81,7 @@ public class SelectEventFragment extends Fragment implements AbsListView.OnItemC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_createevent, container, false);
+        View view = inflater.inflate(R.layout.fragment_selectevent, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -137,7 +137,7 @@ public class SelectEventFragment extends Fragment implements AbsListView.OnItemC
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
