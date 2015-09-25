@@ -4,12 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,13 +18,12 @@ import android.widget.ListView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.software.shell.fab.ActionButton;
 
 
-public class MainActivity extends ActionBarActivity implements SelectEventFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SelectEventFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener {
 
-    private ActionButton actionButton;
-    private MainActivityFragment mainActivityFragment;
+
+    private ScanningFragment scanningFragment;
     private String[] menuOptions;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -39,8 +37,8 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mainActivityFragment = new MainActivityFragment();
-        getFragmentManager().beginTransaction().add(R.id.container, mainActivityFragment).commit();
+        scanningFragment = new ScanningFragment();
+        getFragmentManager().beginTransaction().add(R.id.container, scanningFragment).commit();
         setContentView(R.layout.activity_main);
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
@@ -51,21 +49,6 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-
-        actionButton = (ActionButton) findViewById(R.id.action_button);
-        actionButton.setImageResource(R.drawable.fab_plus_icon);
-        actionButton.setButtonColor(Color.RED);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-                integrator.setPrompt("Scan a barcode");
-                integrator.setCameraId(0);  // Use a specific camera of the device
-                integrator.setBeepEnabled(false);
-                integrator.initiateScan();
-            }
-        });
 
     }
 
@@ -115,16 +98,6 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            String s = scanResult.getContents();
-            mainActivityFragment.setText(s);
-        }
-        // else continue with any other code you need in the method
-
-
-    }
 
     private void addDrawerItems() {
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menuOptions);
@@ -192,6 +165,18 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
         setTitle(menuOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }*/
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            getFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
+            scanningFragment.setText(scanResult.getContents());
+        }
+        // else continue with any other code you need in the method
+    }
+
 
     @Override
     public void onSelectEventInteraction(String id){

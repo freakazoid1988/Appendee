@@ -1,6 +1,7 @@
 package com.cfg.appendee;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +10,6 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +47,10 @@ public class CreateEventFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    public CreateEventFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -63,10 +67,6 @@ public class CreateEventFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public CreateEventFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -152,6 +152,12 @@ public class CreateEventFragment extends Fragment {
         mListener = null;
     }
 
+    private void startNewAsyncTask(String nome, String data, String luogo){
+        CreateEventTask createEventTask = new CreateEventTask(nome, data, luogo, this.getActivity());
+        this.asyncTaskWeakRef = new WeakReference<CreateEventTask>(createEventTask);
+        createEventTask.execute();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -165,12 +171,6 @@ public class CreateEventFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onCreateEventInteraction(Uri uri);
-    }
-
-    private void startNewAsyncTask(String nome, String data, String luogo){
-        CreateEventTask createEventTask = new CreateEventTask(nome, data, luogo, this.getActivity());
-        this.asyncTaskWeakRef = new WeakReference<CreateEventTask>(createEventTask);
-        createEventTask.execute();
     }
 
     private class CreateEventTask extends AsyncTask<Void, Void, Boolean>{
@@ -212,7 +212,7 @@ public class CreateEventFragment extends Fragment {
         @Override
         protected void onPostExecute(final Boolean success){
             if(success){
-                Fragment f = new MainActivityFragment();
+                Fragment f = new ScanningFragment();
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.container, f).commit();
             }
