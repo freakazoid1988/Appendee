@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -21,7 +22,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.software.shell.fab.ActionButton;
 
 
-public class MainActivity extends ActionBarActivity implements SelectEventFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements SelectEventFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener {
 
     private ActionButton actionButton;
     private MainActivityFragment mainActivityFragment;
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
         super.onCreate(savedInstanceState);
 
         mainActivityFragment = new MainActivityFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, mainActivityFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.container, mainActivityFragment).commit();
         setContentView(R.layout.activity_main);
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
@@ -142,6 +143,12 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 1:
+                        Fragment fragment1 = new CreateEventFragment();
+                        FragmentManager fragmentManager1 = getFragmentManager();
+                        fragmentManager1.beginTransaction().replace(R.id.container, fragment1).commit();
+                        mDrawerList.setItemChecked(position, true);
+                        setTitle(menuOptions[position]);
+                        mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                 }
             }
@@ -186,7 +193,13 @@ public class MainActivity extends ActionBarActivity implements SelectEventFragme
         mDrawerLayout.closeDrawer(mDrawerList);
     }*/
 
-    public void onFragmentInteraction(String id){
+    @Override
+    public void onSelectEventInteraction(String id){
+
+    }
+
+    @Override
+    public void onCreateEventInteraction(Uri uri) {
 
     }
 }

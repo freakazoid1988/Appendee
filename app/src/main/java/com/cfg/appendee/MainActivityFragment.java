@@ -1,6 +1,7 @@
 package com.cfg.appendee;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LayoutInflater lf = getActivity().getLayoutInflater();
+        //LayoutInflater lf = getActivity().getLayoutInflater();
 
-        View rootView = lf.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         result_textView = (TextView) rootView.findViewById(R.id.result_textView);
         result_textView.setTextSize(18);
         return rootView;
