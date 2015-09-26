@@ -1,8 +1,12 @@
 package com.cfg.appendee;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,16 +14,23 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.cfg.appendee.database.AppenDB;
 import com.cfg.appendee.database.DatabaseContract;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -35,14 +46,15 @@ public class CreateEventFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static GregorianCalendar gc;
+    private static Calendar c;
+    private static int year, month, day, hour, minute;
+    private static TextView textViewDate, textViewTime;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private EditText editTextNome, editTextLuogo, editTextData;
     private Button confirmButton;
-
     private WeakReference<CreateEventTask> asyncTaskWeakRef;
 
     private OnFragmentInteractionListener mListener;
@@ -85,9 +97,9 @@ public class CreateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_create_event, container, false);
+
         editTextNome = (EditText) rootView.findViewById(R.id.editTextNome);
         editTextLuogo = (EditText) rootView.findViewById(R.id.editTextLuogo);
-        editTextData = (EditText) rootView.findViewById(R.id.editTextData);
 
         confirmButton = (Button) rootView.findViewById(R.id.confirmButton);
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +108,34 @@ public class CreateEventFragment extends Fragment {
                 attemptRegistration();
             }
         });
+
+        c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+
+        textViewDate = (TextView) rootView.findViewById(R.id.textViewDate);
+        textViewDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dateDialogFragment = new DatePickerFragment();
+                dateDialogFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        textViewTime = (TextView) rootView.findViewById(R.id.textViewTime);
+        textViewTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment timeDialogFragment = new TimePickerFragment();
+                timeDialogFragment.show(getFragmentManager(), "timePicker");
+            }
+        });
+
+
+
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -103,24 +143,18 @@ public class CreateEventFragment extends Fragment {
     private void attemptRegistration() {
         String nome = editTextNome.getText().toString();
         String luogo = editTextLuogo.getText().toString();
-        String data = editTextData.getText().toString();
+        long data = c.getTime().getTime();
 
         if(nome==null){
             return;
         }
-        if(nome==""){
+        if (nome.equals("")) {
             return;
         }
         if(luogo==null){
             return;
         }
-        if(luogo==""){
-            return;
-        }
-        if(data==null){
-            return;
-        }
-        if(data==""){
+        if (luogo.equals("")) {
             return;
         }
 
@@ -152,8 +186,8 @@ public class CreateEventFragment extends Fragment {
         mListener = null;
     }
 
-    private void startNewAsyncTask(String nome, String data, String luogo){
-        CreateEventTask createEventTask = new CreateEventTask(nome, data, luogo, this.getActivity());
+    private void startNewAsyncTask(String nome, long data, String luogo) {
+        CreateEventTask createEventTask = new CreateEventTask(nome, luogo, data, this.getActivity());
         this.asyncTaskWeakRef = new WeakReference<CreateEventTask>(createEventTask);
         createEventTask.execute();
     }
@@ -173,11 +207,57 @@ public class CreateEventFragment extends Fragment {
         public void onCreateEventInteraction(Uri uri);
     }
 
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            /*gc.set(GregorianCalendar.HOUR, hourOfDay);
+            gc.set(GregorianCalendar.MINUTE, minute);*/
+            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            c.set(Calendar.MINUTE, minute);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            textViewTime.setText(sdf.format(c.getTime()).toString());
+        }
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            //gc.set(year, month, day);
+            c.set(Calendar.YEAR, year);
+            c.set(Calendar.MONTH, month);
+            c.set(Calendar.DAY_OF_MONTH, day);
+            SimpleDateFormat sdf = new SimpleDateFormat("d-MM-yyyy");
+            textViewDate.setText(sdf.format(c.getTime()).toString());
+
+        }
+    }
+
     private class CreateEventTask extends AsyncTask<Void, Void, Boolean>{
-        private final String nome, luogo, data;
+        private final String nome, luogo;
+        private final long data;
         private Context context;
 
-        CreateEventTask(String nome, String luogo, String data, Context context){
+        CreateEventTask(String nome, String luogo, long data, Context context) {
             this.nome=nome;
             this.data=data;
             this.luogo=luogo;
@@ -194,10 +274,10 @@ public class CreateEventFragment extends Fragment {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.NAME, nome);
             values.put(DatabaseContract.PLACE, luogo);
-            values.put(DatabaseContract.DATE, data);
+            values.put(DatabaseContract.DATE, data / 1000);
             try{
 
-                insert = db.insert(DatabaseContract.Events, null, values);
+                insert = db.insert(DatabaseContract.EVENTS, null, values);
             }catch(SQLiteException sqle){
                 return false;
             }

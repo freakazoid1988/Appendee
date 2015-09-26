@@ -14,8 +14,8 @@ public class AppenDB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME="AppenDB.db";
     private static String DB_PATH ="";
-    private SQLiteDatabase mDataBase;
     private final Context mContext;
+    private SQLiteDatabase mDataBase;
 
     public AppenDB(Context context){
         super(context, DATABASE_NAME, null, DatabaseContract.DATABASE_VERSION);
@@ -28,7 +28,7 @@ public class AppenDB extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+DatabaseContract.Events);
+        db.execSQL("DROP TABLE IF EXISTS "+DatabaseContract.EVENTS);
         onCreate(db);
     }
 

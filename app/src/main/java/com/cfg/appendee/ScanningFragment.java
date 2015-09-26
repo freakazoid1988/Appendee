@@ -22,8 +22,17 @@ public class ScanningFragment extends Fragment {
 
     private TextView result_textView;
     private ActionButton actionButton;
+    private int ID;
 
     public ScanningFragment() {
+    }
+
+    public static ScanningFragment newInstance(int param1) {
+        ScanningFragment scanningFragment = new ScanningFragment();
+        Bundle args = new Bundle();
+        args.putInt("eventID", param1);
+        scanningFragment.setArguments(args);
+        return scanningFragment;
     }
 
     @Override
@@ -32,10 +41,15 @@ public class ScanningFragment extends Fragment {
         //LayoutInflater lf = getActivity().getLayoutInflater();
 
         View rootView = inflater.inflate(R.layout.fragment_scanning, container, false);
+
+        if (getArguments() != null) {
+            ID = getArguments().getInt("eventID");
+        }
+
         result_textView = (TextView) rootView.findViewById(R.id.result_textView);
         result_textView.setTextSize(24);
 
-        result_textView.setText("Benvenuto! Inizia la scansione, ebbreodimmerda");
+        result_textView.setText("Benvenuto! Inizia la scansione, ebbreo.");
 
         actionButton = (ActionButton) rootView.findViewById(R.id.action_button);
         actionButton.setImageResource(R.drawable.fab_plus_icon);

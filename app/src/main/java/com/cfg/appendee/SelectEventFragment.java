@@ -1,53 +1,64 @@
 package com.cfg.appendee;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
-import com.cfg.appendee.dummy.DummyContent;
+import com.cfg.appendee.database.AppenDB;
+import com.cfg.appendee.database.DatabaseContract;
+import com.cfg.appendee.objects.Event;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link SelectEventFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link SelectEventFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class SelectEventFragment extends Fragment implements AbsListView.OnItemClickListener {
-
+public class SelectEventFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    ArrayAdapter<Event> eventArrayAdapter;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    private WeakReference<RetrieveAllEventsTask> asyncTaskWeakRef;
+    private ListView listView;
+
+    public SelectEventFragment() {
+        // Required empty public constructor
+    }
 
     /**
-     * The fragment's ListView/GridView.
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment SelectEventFragment.
      */
-    private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    private ListAdapter mAdapter;
-
-    // TODO: Rename and change types of parameters
+    // TODO: Rename and change types and number of parameters
     public static SelectEventFragment newInstance(String param1, String param2) {
         SelectEventFragment fragment = new SelectEventFragment();
         Bundle args = new Bundle();
@@ -57,41 +68,42 @@ public class SelectEventFragment extends Fragment implements AbsListView.OnItemC
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public SelectEventFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(getActivity());
+        retrieveAllEventsTask.execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_selectevent, container, false);
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_select_event, container, false);
+        listView = (ListView) rootView.findViewById(R.id.listView);
+        ArrayList<Event> arrayList = new ArrayList<Event>();
+        eventArrayAdapter = new ArrayAdapter<Event>(getActivity(), R.layout.row, arrayList);
 
-        // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        listView.setClickable(true);
+        listView.setLongClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.onSelectEventInteraction(eventArrayAdapter.getItem(i).getID());
+                Toast.makeText(getActivity().getBaseContext(), eventArrayAdapter.getItem(i).toString(), Toast.LENGTH_LONG).show();
+            }
+        });
 
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
+        listView.setAdapter(eventArrayAdapter);
 
-        return view;
+        return rootView;
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -110,26 +122,20 @@ public class SelectEventFragment extends Fragment implements AbsListView.OnItemC
         mListener = null;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onSelectEventInteraction(DummyContent.ITEMS.get(position).id);
-        }
+    /*@Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        mListener.onSelectEventInteraction(eventArrayAdapter.getItem(i).getID());
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+    }*/
 
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
+    private void startNewAsyncTask() {
+        RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(this.getActivity());
+        this.asyncTaskWeakRef = new WeakReference<RetrieveAllEventsTask>(retrieveAllEventsTask);
+        retrieveAllEventsTask.execute();
     }
 
     /**
@@ -144,7 +150,48 @@ public class SelectEventFragment extends Fragment implements AbsListView.OnItemC
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSelectEventInteraction(String id);
+        public void onSelectEventInteraction(int id);
+    }
+
+    private class RetrieveAllEventsTask extends AsyncTask<Void, Void, ArrayList<Event>> {
+
+        private Context context;
+
+        RetrieveAllEventsTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected ArrayList<Event> doInBackground(Void... voids) {
+            ArrayList events = new ArrayList<Event>();
+            AppenDB mDbHelper = new AppenDB(context);
+
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(DatabaseContract.FETCH_EVENTS, null);
+            if (c.moveToFirst()) {
+                do {
+                    Event e = new Event();
+                    e.setID(c.getInt(c.getColumnIndex(DatabaseContract._ID1)));
+                    e.setName(c.getString(c.getColumnIndex(DatabaseContract.NAME)));
+                    e.setLocation(c.getString(c.getColumnIndex(DatabaseContract.PLACE)));
+                    int date = c.getInt(c.getColumnIndex(DatabaseContract.DATE));
+                    Date d = new Date((long) date * 1000);
+                    GregorianCalendar gc = new GregorianCalendar();
+                    gc.setTime(d);
+                    e.setDate(gc);
+                    events.add(e);
+                } while (c.moveToNext());
+            }
+            return events;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Event> events) {
+            if (!events.isEmpty()) {
+                eventArrayAdapter.addAll(events);
+                eventArrayAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 }

@@ -37,9 +37,11 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        setContentView(R.layout.activity_main);
+
         scanningFragment = new ScanningFragment();
         getFragmentManager().beginTransaction().add(R.id.container, scanningFragment).commit();
-        setContentView(R.layout.activity_main);
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -179,8 +181,9 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
 
 
     @Override
-    public void onSelectEventInteraction(String id){
-
+    public void onSelectEventInteraction(int id) {
+        ScanningFragment scanningFragment = ScanningFragment.newInstance(id);
+        getFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
     }
 
     @Override
