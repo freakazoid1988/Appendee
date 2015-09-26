@@ -74,7 +74,7 @@ public class ScanningFragment extends Fragment {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             String s = scanResult.getContents();
-            setText(s);
+            setText("Ho scansionato il codice " + s + ", fai click su \"Registra Entrata\" o \"Registra uscita\" per salvarlo nel database");
         }
         // else continue with any other code you need in the method
     }

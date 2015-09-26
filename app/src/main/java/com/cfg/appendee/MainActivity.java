@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
 
         setContentView(R.layout.activity_main);
 
-        scanningFragment = new ScanningFragment();
-        getFragmentManager().beginTransaction().add(R.id.container, scanningFragment).commit();
+        WelcomeFragment welcomeFragment = new WelcomeFragment();
+        getFragmentManager().beginTransaction().add(R.id.container, welcomeFragment).commit();
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -152,29 +152,13 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    /*private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(menuOptions[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }*/
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             getFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
-            scanningFragment.setText(scanResult.getContents());
+            scanningFragment.setText(scanResult.getContents()); //TODO Capire se è lui o l'attività nel Fragment a cambiare il testo
         }
         // else continue with any other code you need in the method
     }
