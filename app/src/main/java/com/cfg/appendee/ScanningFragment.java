@@ -1,10 +1,12 @@
 package com.cfg.appendee;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,7 @@ import com.software.shell.fab.ActionButton;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ScanningFragment extends Fragment {
+public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     private TextView result_textView;
     private ActionButton actionButton;
@@ -54,21 +56,12 @@ public class ScanningFragment extends Fragment {
         actionButton = (ActionButton) rootView.findViewById(R.id.action_button);
         actionButton.setImageResource(R.drawable.fab_plus_icon);
         actionButton.setButtonColor(Color.RED);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(getActivity());
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-                integrator.setPrompt("Scan a barcode");
-                integrator.setCameraId(0);  // Use a specific camera of the device
-                integrator.setBeepEnabled(false);
-                integrator.initiateScan();
-            }
-        });
+        actionButton.setOnClickListener(this);
 
         return rootView;
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -77,9 +70,31 @@ public class ScanningFragment extends Fragment {
             setText("Ho scansionato il codice " + s + ", fai click su \"Registra Entrata\" o \"Registra uscita\" per salvarlo nel database");
         }
         // else continue with any other code you need in the method
+    }*/
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case IntentIntegrator.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    // Parsing bar code reader result
+                    IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                    if (true)
+                        Log.d("Scan", "Parsing bar code reader result: " + result.toString()); //TODO
+
+                }
+                break;
+        }
     }
 
     public void setText(String s) {
         result_textView.setText(s);
+    }
+
+    @Override
+    public void onClick(View view) {
+        IntentIntegrator.forFragment(this).initiateScan();
     }
 }

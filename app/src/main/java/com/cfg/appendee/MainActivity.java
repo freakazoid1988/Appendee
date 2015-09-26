@@ -2,7 +2,6 @@ package com.cfg.appendee;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,9 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 
 public class MainActivity extends AppCompatActivity implements SelectEventFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener {
@@ -150,17 +146,6 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            getFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
-            scanningFragment.setText(scanResult.getContents()); //TODO Capire se è lui o l'attività nel Fragment a cambiare il testo
-        }
-        // else continue with any other code you need in the method
     }
 
 
