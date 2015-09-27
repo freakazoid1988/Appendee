@@ -25,4 +25,6 @@
     <string name="luogo_evento">Luogo Evento</string>
     <string name="OK">OK</string>
     <string name="data_evento">Data e Ora Evento</string>
+    <string name="inButton">Registra Entrata</string>
+    <string name="outButton">Registra Uscita</string>
 </resources>
