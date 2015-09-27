@@ -1,5 +1,8 @@
 package com.cfg.appendee.objects;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by davem on 27/09/2015.
  */
@@ -39,5 +42,17 @@ public class Participant {
 
     public void setUscita(long uscita) {
         this.uscita = uscita;
+    }
+
+    @Override
+    public String toString(){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(getEntrata()*1000);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String entrata = sdf.format(c.getTime()).toString();
+        c.setTimeInMillis(getUscita()*1000);
+        String uscita = sdf.format(c.getTime()).toString();
+
+        return Integer.toString(getNumber())+" Entrata: "+entrata+" Uscita: "+uscita;
     }
 }
