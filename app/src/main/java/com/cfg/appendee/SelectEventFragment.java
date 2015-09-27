@@ -76,8 +76,10 @@ public class SelectEventFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(getActivity());
-        retrieveAllEventsTask.execute();
+        /*RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(getActivity());
+        retrieveAllEventsTask.execute();*/
+
+        startNewAsyncTask();
     }
 
     @Override
@@ -96,6 +98,14 @@ public class SelectEventFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mListener.onSelectEventInteraction(eventArrayAdapter.getItem(i).getID());
                 Toast.makeText(getActivity().getBaseContext(), eventArrayAdapter.getItem(i).toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity().getBaseContext(), "TODO, sorry ^^", Toast.LENGTH_LONG).show(); //TODO
+                return false;
             }
         });
 
@@ -182,6 +192,7 @@ public class SelectEventFragment extends Fragment {
                     events.add(e);
                 } while (c.moveToNext());
             }
+            db.close();
             return events;
         }
 

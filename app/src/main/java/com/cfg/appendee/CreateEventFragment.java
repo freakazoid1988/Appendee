@@ -284,7 +284,6 @@ public class CreateEventFragment extends Fragment {
             try {
                 db.execSQL(DatabaseContract.createEvent(insert));
             }catch(SQLiteException sqle){
-                System.err.println("Aiuto, non sono riuscito a creare la tabella relativa all'evento!");
                 return false;
             }
             return true;

@@ -18,9 +18,9 @@ import android.widget.TextView;
 
 import com.cfg.appendee.database.AppenDB;
 import com.cfg.appendee.database.DatabaseContract;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.software.shell.fab.ActionButton;
 
 
 /**
@@ -30,7 +30,7 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     private static final int REGISTRA_ENTRATA = 1, REGISTRA_USCITA = 2;
     private TextView result_textView;
-    private ActionButton actionButton;
+    private FloatingActionButton actionButton;
     private LinearLayout linearLayoutRegistraButtons;
     private Button registraEntrataButton, registraUscitaButton;
     private int ID;
@@ -62,9 +62,9 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
         result_textView.setText("Benvenuto! Inizia la scansione, ebbreo.");
 
-        actionButton = (ActionButton) rootView.findViewById(R.id.action_button);
-        actionButton.setImageResource(R.drawable.fab_plus_icon);
-        actionButton.setButtonColor(Color.RED);
+        actionButton = (FloatingActionButton) rootView.findViewById(R.id.action_button);
+        actionButton.setImageResource(R.drawable.fab_add);
+        actionButton.setColorNormal(Color.RED);
         actionButton.setOnClickListener(this);
 
         registraEntrataButton = (Button) rootView.findViewById(R.id.inButton);
@@ -104,12 +104,14 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
                     System.out.println(Integer.parseInt(s) + " " + System.currentTimeMillis() / 1000);
                     sqle.printStackTrace();
                 }
+                db.close();
                 break;
 
             case REGISTRA_USCITA:
                 cv.put(DatabaseContract.USCITA, System.currentTimeMillis() / 1000);
                 String where = DatabaseContract.NUMBER + "=" + s;
                 int count = db.update(tablename, cv, where, null);
+                db.close();
                 break;
         }
     }

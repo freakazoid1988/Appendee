@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.software.shell.fab.ActionButton
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/action_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin" />
+        android:layout_marginBottom="@dimen/abc_floating_window_z"
+        android:layout_marginRight="@dimen/abc_floating_window_z" />
 </RelativeLayout>

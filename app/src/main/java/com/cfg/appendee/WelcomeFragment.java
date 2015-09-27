@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.software.shell.fab.ActionButton;
-
+import com.github.clans.fab.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +31,7 @@ public class WelcomeFragment extends Fragment {
     private String mParam2;
 
     private TextView welcomeTextView;
-    private ActionButton actionButton;
+    private FloatingActionButton actionButton;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -76,9 +75,9 @@ public class WelcomeFragment extends Fragment {
         welcomeTextView.setTextSize(24);
         welcomeTextView.setText("Ciao! Premi il tasto rosso in basso per aggiungere un evento, o, se preferisci, usa il Navigation Drawer a sinistra");
 
-        actionButton = (ActionButton) rootView.findViewById(R.id.action_button2);
-        actionButton.setImageResource(R.drawable.fab_plus_icon);
-        actionButton.setButtonColor(Color.RED);
+        actionButton = (FloatingActionButton) rootView.findViewById(R.id.action_button2);
+        actionButton.setImageResource(R.drawable.fab_add);
+        actionButton.setColorNormal(Color.RED);
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Fragment fragment1 = new CreateEventFragment();
