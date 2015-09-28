@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
-public class MainActivity extends AppCompatActivity implements SelectEventFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SelectEventFragment.OnSelectEventFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener, ScanningFragment.OnScanningFragmentInteractionListener {
 
 
     private ScanningFragment scanningFragment;
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
+                switch (position) {
                     case 0:
                         Fragment fragment = new SelectEventFragment();
                         FragmentManager fragmentManager = getFragmentManager();
@@ -158,5 +158,11 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onCreateEventInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onSelectEventInteraction(String tablename) {
+        ExportFragment exportFragment = ExportFragment.newInstance(tablename);
+        getFragmentManager().beginTransaction().replace(R.id.container, exportFragment).commit();
     }
 }

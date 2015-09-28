@@ -28,4 +28,6 @@
     <string name="inButton">Registra Entrata</string>
     <string name="outButton">Registra Uscita</string>
     <string name="exportButton">Esporta</string>
+    <string name="scan">Scansiona</string>
+    <string name="export_to_excel">Esporta in Excel</string>
 </resources>

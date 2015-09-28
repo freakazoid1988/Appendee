@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +28,9 @@ import com.google.zxing.integration.android.IntentResult;
 public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     private static final int REGISTRA_ENTRATA = 1, REGISTRA_USCITA = 2;
+    private OnScanningFragmentInteractionListener mListener;
     private TextView result_textView;
-    private FloatingActionButton actionButton;
+    private FloatingActionButton scanCode, exportToExcel;
     private LinearLayout linearLayoutRegistraButtons;
     private Button registraEntrataButton, registraUscitaButton;
     private int ID;
@@ -62,10 +62,16 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
         result_textView.setText("Benvenuto! Inizia la scansione, ebbreo.");
 
-        actionButton = (FloatingActionButton) rootView.findViewById(R.id.action_button);
-        actionButton.setImageResource(R.drawable.fab_add);
-        actionButton.setColorNormal(Color.RED);
-        actionButton.setOnClickListener(this);
+        scanCode = (FloatingActionButton) rootView.findViewById(R.id.scan_code);
+        scanCode.setOnClickListener(this);
+
+        exportToExcel = (FloatingActionButton) rootView.findViewById(R.id.export_to_excel);
+        exportToExcel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onSelectEventInteraction(tablename);
+            }
+        });
 
         registraEntrataButton = (Button) rootView.findViewById(R.id.inButton);
         registraEntrataButton.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +93,24 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnScanningFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnScanningFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
 
     private void registra(int inOrOut) {
         AppenDB mDBHelper = new AppenDB(getActivity());
@@ -143,5 +167,20 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         IntentIntegrator.forFragment(this).initiateScan();
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnScanningFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onSelectEventInteraction(String tablename);
     }
 }

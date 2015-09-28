@@ -28,21 +28,15 @@ import java.util.GregorianCalendar;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SelectEventFragment.OnFragmentInteractionListener} interface
+ * {@link SelectEventFragment.OnSelectEventFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SelectEventFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SelectEventFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     ArrayAdapter<Event> eventArrayAdapter;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private OnFragmentInteractionListener mListener;
+
+    private OnSelectEventFragmentInteractionListener mListener;
     private WeakReference<RetrieveAllEventsTask> asyncTaskWeakRef;
     private ListView listView;
 
@@ -54,30 +48,16 @@ public class SelectEventFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment SelectEventFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static SelectEventFragment newInstance(String param1, String param2) {
+    public static SelectEventFragment newInstance() {
         SelectEventFragment fragment = new SelectEventFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        /*RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(getActivity());
-        retrieveAllEventsTask.execute();*/
 
         startNewAsyncTask();
     }
@@ -119,7 +99,7 @@ public class SelectEventFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnSelectEventFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -158,9 +138,9 @@ public class SelectEventFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnSelectEventFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSelectEventInteraction(int id);
+        void onSelectEventInteraction(int id);
     }
 
     private class RetrieveAllEventsTask extends AsyncTask<Void, Void, ArrayList<Event>> {
