@@ -47,10 +47,10 @@ public class Participant {
     @Override
     public String toString(){
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(getEntrata()*1000);
+        c.setTimeInMillis(getEntrata() * 1000); //Because we stored it in seconds
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String entrata = sdf.format(c.getTime()).toString();
-        c.setTimeInMillis(getUscita()*1000);
+        c.setTimeInMillis(getUscita() * 1000); //Because we stored it in seconds
         String uscita = sdf.format(c.getTime()).toString();
 
         return Integer.toString(getNumber())+" Entrata: "+entrata+" Uscita: "+uscita;

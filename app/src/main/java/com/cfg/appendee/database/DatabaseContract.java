@@ -24,7 +24,7 @@ public final class DatabaseContract implements BaseColumns {
     }
 
     public static String createEvent(long insert){
-        return "CREATE TABLE " + "\"" + Long.toString(insert) + "\"" + " (" + _ID2 + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + NUMBER + " INTEGER, " + INGRESSO + " INTEGER, " + USCITA + " INTEGER)";
+        return "CREATE TABLE " + "T" + Long.toString(insert) + " (" + _ID2 + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + NUMBER + " INTEGER, " + INGRESSO + " INTEGER, " + USCITA + " INTEGER)";
     }
 
     /**

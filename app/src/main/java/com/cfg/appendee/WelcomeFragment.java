@@ -77,7 +77,7 @@ public class WelcomeFragment extends Fragment {
 
         actionButton = (FloatingActionButton) rootView.findViewById(R.id.action_button2);
         actionButton.setImageResource(R.drawable.fab_add);
-        actionButton.setColorNormal(Color.RED);
+        actionButton.setColorNormal(Color.BLACK);
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Fragment fragment1 = new CreateEventFragment();

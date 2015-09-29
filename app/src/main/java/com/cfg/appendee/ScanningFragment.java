@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.cfg.appendee.database.AppenDB;
 import com.cfg.appendee.database.DatabaseContract;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -31,6 +33,7 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
     private OnScanningFragmentInteractionListener mListener;
     private TextView result_textView;
     private FloatingActionButton scanCode, exportToExcel;
+    private FloatingActionMenu actionMenu;
     private LinearLayout linearLayoutRegistraButtons;
     private Button registraEntrataButton, registraUscitaButton;
     private int ID;
@@ -54,18 +57,23 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
         if (getArguments() != null) {
             ID = getArguments().getInt("eventID");
-            tablename = "\"" + Integer.toString(ID) + "\"";
+            tablename = "T" + Integer.toString(ID);
         }
 
         result_textView = (TextView) rootView.findViewById(R.id.result_textView);
-        result_textView.setTextSize(24);
+        result_textView.setTextSize(18);
 
         result_textView.setText("Benvenuto! Inizia la scansione, ebbreo.");
 
+        actionMenu = (FloatingActionMenu) rootView.findViewById(R.id.action_menu);
+        actionMenu.setMenuButtonColorNormal(Color.BLACK);
+
         scanCode = (FloatingActionButton) rootView.findViewById(R.id.scan_code);
+        scanCode.setColorNormal(R.color.button_material_light);
         scanCode.setOnClickListener(this);
 
         exportToExcel = (FloatingActionButton) rootView.findViewById(R.id.export_to_excel);
+        exportToExcel.setColorNormal(R.color.button_material_light);
         exportToExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

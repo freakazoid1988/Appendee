@@ -204,7 +204,7 @@ public class CreateEventFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onCreateEventInteraction(Uri uri);
+        void onCreateEventInteraction(Uri uri);
     }
 
     public static class TimePickerFragment extends DialogFragment
@@ -292,7 +292,7 @@ public class CreateEventFragment extends Fragment {
         @Override
         protected void onPostExecute(final Boolean success){
             if(success){
-                Fragment f = new ScanningFragment();
+                Fragment f = new WelcomeFragment();
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.container, f).commit();
             }
