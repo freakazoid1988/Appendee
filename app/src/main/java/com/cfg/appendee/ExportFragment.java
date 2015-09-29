@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -199,8 +201,8 @@ public class ExportFragment extends Fragment {
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            //File file = new File(context.getExternalFilesDir(null), tablename + ".txt");
-            File file = new File(path, tablename + ".txt"); // Conviene caricare in una cartella esterna?
+            File file = new File(context.getExternalFilesDir(null), tablename + ".txt");
+            //File file = new File(path, tablename + ".txt"); // Conviene caricare in una cartella esterna?
 
             try {
                 PrintWriter pw = new PrintWriter(file);
@@ -218,12 +220,23 @@ public class ExportFragment extends Fragment {
         @Override
         public void onPostExecute(final Boolean success) {
             final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-            alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    // The intent does not have a URI, so declare the "text/plain" MIME type
+                    emailIntent.setType("text/plain");
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email subject");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");
+                    emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + tablename + ".txt"));
+                    startActivity(emailIntent);
+                }
+            }).setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
                 }
-            }).setIcon(android.R.drawable.ic_dialog_info).setMessage("Per una volta è filato tutto liscio").show();
+            }).setIcon(android.R.drawable.ic_dialog_info).setMessage("Per una volta è filato tutto liscio, vuoi inviare il file per email?").show();
         }
     }
 

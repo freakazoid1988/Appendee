@@ -63,7 +63,7 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
         result_textView = (TextView) rootView.findViewById(R.id.result_textView);
         result_textView.setTextSize(18);
 
-        result_textView.setText("Benvenuto! Inizia la scansione, ebbreo.");
+        result_textView.setText("Benvenuto! Inizia la scansione.");
 
         actionMenu = (FloatingActionMenu) rootView.findViewById(R.id.action_menu);
         actionMenu.setMenuButtonColorNormal(Color.BLACK);
