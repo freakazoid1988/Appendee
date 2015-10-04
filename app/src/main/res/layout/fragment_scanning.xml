@@ -27,15 +27,15 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_photo_camera_black_24dp"
             fab:fab_label="@string/scan"
-            fab:fab_size="mini" />
+            fab:fab_size="normal" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/export_to_excel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_done_black_24dp"
-            fab:fab_label="@string/export_to_excel"
-            fab:fab_size="mini" />
+            fab:fab_label="@string/export_to_file"
+            fab:fab_size="normal" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
