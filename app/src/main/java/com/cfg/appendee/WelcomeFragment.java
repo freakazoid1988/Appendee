@@ -14,11 +14,6 @@ import com.github.clans.fab.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link WelcomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link WelcomeFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class WelcomeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -73,11 +68,10 @@ public class WelcomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_welcome, container, false);
         welcomeTextView = (TextView) rootView.findViewById(R.id.welcomeTextView);
         welcomeTextView.setTextSize(24);
-        welcomeTextView.setText("Ciao! Premi il tasto rosso in basso per aggiungere un evento, o, se preferisci, usa il Navigation Drawer a sinistra");
+        welcomeTextView.setText("Ciao! Premi il tasto in basso per aggiungere un evento, o, se preferisci, usa il Navigation Drawer a sinistra");
 
         actionButton = (FloatingActionButton) rootView.findViewById(R.id.action_button2);
         actionButton.setImageResource(R.drawable.fab_add);
-        actionButton.setColorNormal(Color.BLACK);
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Fragment fragment1 = new CreateEventFragment();

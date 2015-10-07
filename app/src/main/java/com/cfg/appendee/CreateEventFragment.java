@@ -292,7 +292,7 @@ public class CreateEventFragment extends Fragment {
         @Override
         protected void onPostExecute(final Boolean success){
             if(success){
-                Fragment f = new WelcomeFragment();
+                Fragment f = new SelectEventFragment();
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.container, f).commit();
             }

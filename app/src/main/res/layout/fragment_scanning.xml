@@ -19,7 +19,9 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/abc_floating_window_z"
-        android:layout_marginRight="@dimen/abc_floating_window_z">
+        android:layout_marginRight="@dimen/abc_floating_window_z"
+        fab:menu_colorNormal="#285d8f"
+        fab:menu_colorPressed="#024168">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/scan_code"

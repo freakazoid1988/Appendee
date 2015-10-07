@@ -76,7 +76,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin">
 
                 <TextView
                     android:id="@+id/textViewDate"
@@ -86,7 +88,7 @@
                     android:layout_gravity="left"
                     android:clickable="true"
                     android:longClickable="false"
-                    android:text="New Text"
+                    android:text="@string/date"
                     android:textSize="@dimen/abc_text_size_medium_material" />
 
                 <TextView
@@ -96,7 +98,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="right"
                     android:clickable="true"
-                    android:text="New Text"
+                    android:text="@string/time"
                     android:textSize="@dimen/abc_text_size_medium_material" />
             </RelativeLayout>
 

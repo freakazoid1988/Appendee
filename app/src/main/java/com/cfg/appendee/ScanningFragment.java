@@ -66,14 +66,15 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
         result_textView.setText("Benvenuto! Inizia la scansione.");
 
         actionMenu = (FloatingActionMenu) rootView.findViewById(R.id.action_menu);
-        actionMenu.setMenuButtonColorNormal(Color.BLACK);
 
         scanCode = (FloatingActionButton) rootView.findViewById(R.id.scan_code);
         scanCode.setColorNormal(R.color.button_material_light);
+        scanCode.setColorPressed(R.color.primary_text_disabled_material_light);
         scanCode.setOnClickListener(this);
 
         exportToExcel = (FloatingActionButton) rootView.findViewById(R.id.export_to_excel);
         exportToExcel.setColorNormal(R.color.button_material_light);
+        exportToExcel.setColorPressed(R.color.primary_text_disabled_material_light);
         exportToExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

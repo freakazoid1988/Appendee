@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.cfg.appendee.WelcomeFragment">
 
     android:orientation="horizontal"
@@ -21,5 +22,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/abc_floating_window_z"
-        android:layout_marginRight="@dimen/abc_floating_window_z" />
+        android:layout_marginRight="@dimen/abc_floating_window_z"
+        fab:fab_colorNormal="#285d8f"
+        fab:fab_colorPressed="#024168"/>
 </RelativeLayout>
