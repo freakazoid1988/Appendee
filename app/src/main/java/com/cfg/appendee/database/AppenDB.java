@@ -23,6 +23,25 @@ public class AppenDB extends SQLiteOpenHelper {
         DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
     }
 
+    public static String createEvent(long insert) {
+        return "CREATE TABLE " + "T" + Long.toString(insert) + " (" + DatabaseContract._ID2 + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + DatabaseContract.NUMBER + " INTEGER, " + DatabaseContract.INGRESSO + " INTEGER, " + DatabaseContract.USCITA + " INTEGER)";
+    }
+
+    /**
+     * @param tablename
+     * @return A query to retrieve the participants from a given event
+     */
+    public static String fetchParticipants(String tablename) {
+        return "SELECT * FROM " + tablename;
+    }
+
+    public static void deleteTable(SQLiteDatabase db, int ID) {
+        String where = DatabaseContract._ID1 + " = " + Integer.toString(ID);
+        String tablename = "T" + Integer.toString(ID);
+        db.execSQL("DROP TABLE IF EXISTS " + tablename);
+        db.delete(DatabaseContract.EVENTS, where, null);
+    }
+
     public void onCreate(SQLiteDatabase db){
         db.execSQL(DatabaseContract.SQL_INITIALISE);
     }

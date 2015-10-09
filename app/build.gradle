@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.cfg.appendee"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -26,4 +26,6 @@ dependencies {
     compile 'com.journeyapps:zxing-android-embedded:3.0.1@aar'
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.github.clans:fab:1.6.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
 }

@@ -3,9 +3,6 @@ package com.cfg.appendee;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -14,6 +11,9 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,8 +133,6 @@ public class CreateEventFragment extends Fragment {
                 timeDialogFragment.show(getFragmentManager(), "timePicker");
             }
         });
-
-
 
         // Inflate the layout for this fragment
         return rootView;
@@ -282,7 +280,7 @@ public class CreateEventFragment extends Fragment {
                 return false;
             }
             try {
-                db.execSQL(DatabaseContract.createEvent(insert));
+                db.execSQL(AppenDB.createEvent(insert));
             }catch(SQLiteException sqle){
                 return false;
             }

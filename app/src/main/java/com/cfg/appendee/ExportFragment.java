@@ -1,7 +1,6 @@
 package com.cfg.appendee;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,23 +105,6 @@ public class ExportFragment extends Fragment {
     }
 
 
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
@@ -162,7 +145,7 @@ public class ExportFragment extends Fragment {
             AppenDB mDbHelper = new AppenDB(context);
 
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
-            Cursor c = db.rawQuery(DatabaseContract.fetchParticipants(tablename), null);
+            Cursor c = db.rawQuery(AppenDB.fetchParticipants(tablename), null);
             if (c.moveToFirst()) {
                 do {
                     Participant p = new Participant();
@@ -226,8 +209,8 @@ public class ExportFragment extends Fragment {
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     // The intent does not have a URI, so declare the "text/plain" MIME type
                     emailIntent.setType("text/plain");
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email subject");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");
+                    /*emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email subject");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");*/
                     emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + tablename + ".txt"));
                     startActivity(emailIntent);
                 }

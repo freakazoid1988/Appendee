@@ -23,16 +23,4 @@ public final class DatabaseContract implements BaseColumns {
     public DatabaseContract() {
     }
 
-    public static String createEvent(long insert){
-        return "CREATE TABLE " + "T" + Long.toString(insert) + " (" + _ID2 + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + NUMBER + " INTEGER, " + INGRESSO + " INTEGER, " + USCITA + " INTEGER)";
-    }
-
-    /**
-     * @param tablename
-     * @return A query to retrieve the participants from a given event
-     */
-    public static String fetchParticipants(String tablename) {
-        return "SELECT * FROM " + tablename;
-    }
-
 }

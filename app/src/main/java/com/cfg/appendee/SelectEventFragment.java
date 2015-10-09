@@ -1,23 +1,22 @@
 package com.cfg.appendee;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.cfg.appendee.database.AppenDB;
 import com.cfg.appendee.database.DatabaseContract;
 import com.cfg.appendee.objects.Event;
+import com.cfg.appendee.objects.MyAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -34,11 +33,14 @@ import java.util.GregorianCalendar;
  * create an instance of this fragment.
  */
 public class SelectEventFragment extends Fragment {
-    ArrayAdapter<Event> eventArrayAdapter;
+    //ArrayAdapter<Event> eventArrayAdapter;
 
     private OnSelectEventFragmentInteractionListener mListener;
     private WeakReference<RetrieveAllEventsTask> asyncTaskWeakRef;
-    private ListView listView;
+    private RecyclerView mRecyclerView;
+    //private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private MyAdapter mAdapter;
 
     public SelectEventFragment() {
         // Required empty public constructor
@@ -67,11 +69,11 @@ public class SelectEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_select_event, container, false);
-        listView = (ListView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         ArrayList<Event> arrayList = new ArrayList<Event>();
-        eventArrayAdapter = new ArrayAdapter<Event>(getActivity(), R.layout.row, arrayList);
+        //eventArrayAdapter = new ArrayAdapter<Event>(getActivity(), R.layout.row, arrayList);
 
-        listView.setClickable(true);
+        /*listView.setClickable(true);
         listView.setLongClickable(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,7 +91,17 @@ public class SelectEventFragment extends Fragment {
             }
         });
 
-        listView.setAdapter(eventArrayAdapter);
+        listView.setAdapter(eventArrayAdapter);*/
+
+
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MyAdapter(getActivity(), arrayList);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setClickable(true);
 
         return rootView;
     }
@@ -111,16 +123,6 @@ public class SelectEventFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    /*@Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        mListener.onSelectEventInteraction(eventArrayAdapter.getItem(i).getID());
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
-    }*/
 
     private void startNewAsyncTask() {
         RetrieveAllEventsTask retrieveAllEventsTask = new RetrieveAllEventsTask(this.getActivity());
@@ -179,8 +181,8 @@ public class SelectEventFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Event> events) {
             if (!events.isEmpty()) {
-                eventArrayAdapter.addAll(events);
-                eventArrayAdapter.notifyDataSetChanged();
+                mAdapter.addAll(events);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

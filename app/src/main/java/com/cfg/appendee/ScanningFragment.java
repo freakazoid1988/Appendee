@@ -2,19 +2,27 @@ package com.cfg.appendee;
 
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cfg.appendee.database.AppenDB;
 import com.cfg.appendee.database.DatabaseContract;
@@ -30,14 +38,17 @@ import com.google.zxing.integration.android.IntentResult;
 public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     private static final int REGISTRA_ENTRATA = 1, REGISTRA_USCITA = 2;
+    private static int inOrOut;
     private OnScanningFragmentInteractionListener mListener;
     private TextView result_textView;
     private FloatingActionButton scanCode, exportToExcel;
     private FloatingActionMenu actionMenu;
-    private LinearLayout linearLayoutRegistraButtons;
-    private Button registraEntrataButton, registraUscitaButton;
+    private RadioButton registraEntrataButton, registraUscitaButton;
+    private RadioGroup radioGroup;
     private int ID;
     private String s, tablename;
+
+
     public ScanningFragment() {
     }
 
@@ -78,28 +89,30 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
         exportToExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onSelectEventInteraction(tablename);
+                mListener.onExportEventInteraction(tablename);
             }
         });
 
-        registraEntrataButton = (Button) rootView.findViewById(R.id.inButton);
-        registraEntrataButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registra(REGISTRA_ENTRATA);
-            }
-        });
-        registraUscitaButton = (Button) rootView.findViewById(R.id.outButton);
-        registraUscitaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registra(REGISTRA_USCITA);
+        radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroupRegistraButtons);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+
+                switch (checkedId) {
+                    case R.id.inButton:
+                        inOrOut = REGISTRA_ENTRATA;
+                        break;
+                    case R.id.outButton:
+                        inOrOut = REGISTRA_USCITA;
+                        break;
+                }
             }
         });
 
-        linearLayoutRegistraButtons = (LinearLayout) rootView.findViewById(R.id.linearLayoutRegistraButtons);
-        linearLayoutRegistraButtons.setVisibility(View.INVISIBLE);
-
+        radioGroup.check(R.id.inButton);
+        inOrOut = REGISTRA_ENTRATA;
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -120,33 +133,67 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-
     private void registra(int inOrOut) {
         AppenDB mDBHelper = new AppenDB(getActivity());
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDBHelper.getWritableDatabase();
 
-        ContentValues cv = new ContentValues();
+        final ContentValues cv = new ContentValues();
 
         switch (inOrOut) {
             case REGISTRA_ENTRATA:
+
                 cv.put(DatabaseContract.NUMBER, Integer.parseInt(s));
                 cv.put(DatabaseContract.INGRESSO, System.currentTimeMillis() / 1000);
-                try {
-                    long newRowId = db.insert(tablename, null, cv);
-                } catch (SQLiteException sqle) {
-                    System.out.println(Integer.parseInt(s) + " " + System.currentTimeMillis() / 1000);
-                    sqle.printStackTrace();
+
+                if (isAlreadyInDb(s, db)) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String where = DatabaseContract.NUMBER + " = " + s;
+                            int count = db.update(tablename, cv, where, null);
+                        }
+                    }).setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setIcon(android.R.drawable.ic_dialog_alert).setMessage("Attenzione! L'utente è già stato registrato in entrata. Sovrascrivere?").show();
+                } else {
+                    try {
+                        long newRowId = db.insert(tablename, null, cv);
+                        Toast.makeText(getActivity(), "Registrato il numero " + s, Toast.LENGTH_LONG).show();
+                    } catch (SQLiteException sqle) {
+                        System.out.println(Integer.parseInt(s) + " " + System.currentTimeMillis() / 1000);
+                        sqle.printStackTrace();
+                    }
                 }
-                db.close();
+
                 break;
 
             case REGISTRA_USCITA:
                 cv.put(DatabaseContract.USCITA, System.currentTimeMillis() / 1000);
                 String where = DatabaseContract.NUMBER + "=" + s;
                 int count = db.update(tablename, cv, where, null);
-                db.close();
                 break;
         }
+    }
+
+    private boolean isAlreadyInDb(String s, SQLiteDatabase db) {
+        String query = "SELECT * FROM " + tablename + " WHERE " + DatabaseContract.NUMBER + " = " + s;
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.scan_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -160,8 +207,8 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
                     IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
                     if (result != null) {
                         s = result.getContents();
-                        setText("Ho scansionato il codice " + s + ", fai click su \"Registra Entrata\" o \"Registra uscita\" per salvarlo nel database");
-                        linearLayoutRegistraButtons.setVisibility(View.VISIBLE);
+                        setText("Ho scansionato il codice " + s);
+                        registra(inOrOut);
                     }
 
                 }
@@ -175,8 +222,22 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        IntentIntegrator.forFragment(this).initiateScan();
+        IntentIntegrator.forSupportFragment(this).initiateScan();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.deleteEventMenuVoice:
+                DeleteEventTask deleteEventTask = new DeleteEventTask(getActivity(), tablename);
+                deleteEventTask.execute();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -190,6 +251,30 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
      */
     public interface OnScanningFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSelectEventInteraction(String tablename);
+        void onExportEventInteraction(String tablename);
+    }
+
+    private class DeleteEventTask extends AsyncTask<Void, Void, Boolean> {
+        private Context context;
+        private String tablename;
+
+        public DeleteEventTask(Context context, String tablename) {
+            this.context = context;
+            this.tablename = tablename;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            AppenDB mDbHelper = new AppenDB(context);
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            AppenDB.deleteTable(db, ID);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            Fragment f = SelectEventFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.container, f).commit();
+        }
     }
 }

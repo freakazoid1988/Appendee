@@ -5,11 +5,79 @@
     android:layout_height="match_parent"
     tools:context="com.cfg.appendee.ScanningFragment">
 
-    <TextView
-        android:id="@+id/result_textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/upperLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewModalita"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="left|center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:text="@string/textViewModalita"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupRegistraButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/inButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:text="@string/inButton" />
+
+
+                <RadioButton
+                    android:id="@+id/outButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:text="@string/outButton" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textViewScanLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="160dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/result_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/action_menu"
@@ -40,36 +108,5 @@
             fab:fab_size="normal" />
 
     </com.github.clans.fab.FloatingActionMenu>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutRegistraButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/action_menu"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/inButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:text="@string/inButton" />
-
-        <Button
-            android:id="@+id/outButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:text="@string/outButton" />
-    </LinearLayout>
 
 </RelativeLayout>

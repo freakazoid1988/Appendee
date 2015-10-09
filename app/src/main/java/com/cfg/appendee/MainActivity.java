@@ -1,10 +1,10 @@
 package com.cfg.appendee;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
         setContentView(R.layout.activity_main);
 
         WelcomeFragment welcomeFragment = new WelcomeFragment();
-        getFragmentManager().beginTransaction().add(R.id.container, welcomeFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, welcomeFragment).commit();
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -107,18 +107,18 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
                 switch (position) {
                     case 0:
                         Fragment fragment = new SelectEventFragment();
-                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
                         mDrawerList.setItemChecked(position, true);
-                        setTitle(menuOptions[position]);
+                        getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 1:
                         Fragment fragment1 = new CreateEventFragment();
-                        FragmentManager fragmentManager1 = getFragmentManager();
+                        FragmentManager fragmentManager1 = getSupportFragmentManager();
                         fragmentManager1.beginTransaction().replace(R.id.container, fragment1).commit();
                         mDrawerList.setItemChecked(position, true);
-                        setTitle(menuOptions[position]);
+                        getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                 }
@@ -152,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onSelectEventInteraction(int id) {
         ScanningFragment scanningFragment = ScanningFragment.newInstance(id);
-        getFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
+        getSupportActionBar().setTitle("Seleziona evento");
     }
 
     @Override
@@ -161,8 +162,13 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     }
 
     @Override
-    public void onSelectEventInteraction(String tablename) {
+    public void onExportEventInteraction(String tablename) {
         ExportFragment exportFragment = ExportFragment.newInstance(tablename);
-        getFragmentManager().beginTransaction().replace(R.id.container, exportFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, exportFragment).commit();
+        getSupportActionBar().setTitle("Esporta");
+    }
+
+    public void setActionBarTitle(String text) {
+        getSupportActionBar().setTitle(text);
     }
 }
