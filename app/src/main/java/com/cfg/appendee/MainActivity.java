@@ -36,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
 
         setContentView(R.layout.activity_main);
 
-        WelcomeFragment welcomeFragment = new WelcomeFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, welcomeFragment).commit();
+        if (savedInstanceState == null) {
+            WelcomeFragment welcomeFragment = new WelcomeFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, welcomeFragment, "WelcomeFragment").commit();
+        }
 
         menuOptions = getResources().getStringArray(R.array.menuOptions);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
                     case 0:
                         Fragment fragment = new SelectEventFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.container, fragment, "SelectEventFragment").commit();
                         mDrawerList.setItemChecked(position, true);
                         getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
                     case 1:
                         Fragment fragment1 = new CreateEventFragment();
                         FragmentManager fragmentManager1 = getSupportFragmentManager();
-                        fragmentManager1.beginTransaction().replace(R.id.container, fragment1).commit();
+                        fragmentManager1.beginTransaction().replace(R.id.container, fragment1, "CreateEventFragment").commit();
                         mDrawerList.setItemChecked(position, true);
                         getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onSelectEventInteraction(int id) {
         ScanningFragment scanningFragment = ScanningFragment.newInstance(id);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, scanningFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, scanningFragment, "ScanningFragment").commit();
         getSupportActionBar().setTitle("Seleziona evento");
     }
 
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onExportEventInteraction(String tablename) {
         ExportFragment exportFragment = ExportFragment.newInstance(tablename);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, exportFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, exportFragment, "ExportFragment").commit();
         getSupportActionBar().setTitle("Esporta");
     }
 

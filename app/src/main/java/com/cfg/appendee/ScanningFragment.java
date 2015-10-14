@@ -1,18 +1,22 @@
 package com.cfg.appendee;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +42,8 @@ import com.google.zxing.integration.android.IntentResult;
 public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     private static final int REGISTRA_ENTRATA = 1, REGISTRA_USCITA = 2;
+    private static final String TAG = "ScanningFragment";
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 3;
     private static int inOrOut;
     private OnScanningFragmentInteractionListener mListener;
     private TextView result_textView;
@@ -58,6 +64,12 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
         args.putInt("eventID", param1);
         scanningFragment.setArguments(args);
         return scanningFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -222,7 +234,45 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        IntentIntegrator.forSupportFragment(this).initiateScan();
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+
+        } else {
+            IntentIntegrator.forSupportFragment(this).setOrientationLocked(true).setBeepEnabled(true).initiateScan();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setMessage("Senza il permesso per utilizzare la fotocamera non posso scansionare il codice").setIcon(android.R.drawable.ic_dialog_alert).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override

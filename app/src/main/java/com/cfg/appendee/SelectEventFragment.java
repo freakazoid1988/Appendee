@@ -35,6 +35,7 @@ import java.util.GregorianCalendar;
 public class SelectEventFragment extends Fragment {
     //ArrayAdapter<Event> eventArrayAdapter;
 
+    private static final String TAG = "SelectEventFragment";
     private OnSelectEventFragmentInteractionListener mListener;
     private WeakReference<RetrieveAllEventsTask> asyncTaskWeakRef;
     private RecyclerView mRecyclerView;
@@ -60,8 +61,8 @@ public class SelectEventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        startNewAsyncTask();
+        setRetainInstance(true);
+        //startNewAsyncTask();
     }
 
     @Override
@@ -102,7 +103,7 @@ public class SelectEventFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setClickable(true);
-
+        startNewAsyncTask();
         return rootView;
     }
 

@@ -38,6 +38,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class ExportFragment extends Fragment {
+    private static final String TAG = "ExportFragment";
     ArrayAdapter<Participant> participantsArrayAdapter;
     private int ID;
     private String tablename;
@@ -75,6 +76,7 @@ public class ExportFragment extends Fragment {
             tablename = getArguments().getString("eventIDString");
         }
 
+        setRetainInstance(true);
         startNewAsyncTask();
     }
 
