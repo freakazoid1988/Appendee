@@ -210,10 +210,10 @@ public class ExportFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     // The intent does not have a URI, so declare the "text/plain" MIME type
-                    emailIntent.setType("text/plain");
-                    /*emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email subject");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");*/
+                    emailIntent.setType("plain/text");
                     emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + tablename + ".txt"));
+                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     startActivity(emailIntent);
                 }
             }).setNegativeButton("Annulla", new DialogInterface.OnClickListener() {

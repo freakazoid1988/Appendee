@@ -174,7 +174,7 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
                 } else {
                     try {
                         long newRowId = db.insert(tablename, null, cv);
-                        Toast.makeText(getActivity(), "Registrato il numero " + s, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Registrato in entrata il numero " + s, Toast.LENGTH_LONG).show();
                     } catch (SQLiteException sqle) {
                         System.out.println(Integer.parseInt(s) + " " + System.currentTimeMillis() / 1000);
                         sqle.printStackTrace();
@@ -187,6 +187,20 @@ public class ScanningFragment extends Fragment implements View.OnClickListener {
                 cv.put(DatabaseContract.USCITA, System.currentTimeMillis() / 1000);
                 String where = DatabaseContract.NUMBER + "=" + s;
                 int count = db.update(tablename, cv, where, null);
+                if (count < 1) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setMessage("Attenzione! L'utente non è mai stato registrato in entrata.");
+                    builder.show();
+                } else {
+                    Toast.makeText(getActivity(), "Registrato in uscita il numero " + s, Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
