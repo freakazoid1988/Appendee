@@ -77,7 +77,7 @@ public class WelcomeFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment1 = new CreateEventFragment();
                 FragmentManager fragmentManager1 = getFragmentManager();
-                fragmentManager1.beginTransaction().replace(R.id.container, fragment1).commit();
+                fragmentManager1.beginTransaction().replace(R.id.container, fragment1).addToBackStack(null).commit();
             }
         });
 

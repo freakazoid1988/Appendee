@@ -55,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Fragment f = ScanningFragment.newInstance(mDataset.get(position).getID());
-                context.getSupportFragmentManager().beginTransaction().replace(R.id.container, f).commit();
+                context.getSupportFragmentManager().beginTransaction().replace(R.id.container, f).addToBackStack(null).commit();
             }
         });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {

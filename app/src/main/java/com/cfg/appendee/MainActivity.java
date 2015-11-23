@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
                     case 0:
                         Fragment fragment = new SelectEventFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.container, fragment, "SelectEventFragment").commit();
+                        fragmentManager.beginTransaction().replace(R.id.container, fragment, "SelectEventFragment").addToBackStack(null).commit();
                         mDrawerList.setItemChecked(position, true);
                         getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
                     case 1:
                         Fragment fragment1 = new CreateEventFragment();
                         FragmentManager fragmentManager1 = getSupportFragmentManager();
-                        fragmentManager1.beginTransaction().replace(R.id.container, fragment1, "CreateEventFragment").commit();
+                        fragmentManager1.beginTransaction().replace(R.id.container, fragment1, "CreateEventFragment").addToBackStack(null).commit();
                         mDrawerList.setItemChecked(position, true);
                         getSupportActionBar().setTitle(menuOptions[position]);
                         mDrawerLayout.closeDrawer(mDrawerList);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onSelectEventInteraction(int id) {
         ScanningFragment scanningFragment = ScanningFragment.newInstance(id);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, scanningFragment, "ScanningFragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, scanningFragment, "ScanningFragment").addToBackStack(null).commit();
         getSupportActionBar().setTitle("Seleziona evento");
     }
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SelectEventFragme
     @Override
     public void onExportEventInteraction(String tablename) {
         ExportFragment exportFragment = ExportFragment.newInstance(tablename);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, exportFragment, "ExportFragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, exportFragment, "ExportFragment").addToBackStack(null).commit();
         getSupportActionBar().setTitle("Esporta");
     }
 
